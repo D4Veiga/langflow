@@ -337,7 +337,7 @@ class TestURLComponent(ComponentTestBaseWithoutClient):
 
         # An empty proxy string should be treated as no proxy
         assert called_kwargs["use_async"] is True
-    
+
     @patch.dict(os.environ, {"HTTP_PROXY": "   ", "HTTPS_PROXY": " \t "}, clear=True)
     @patch("lfx.components.data_source.url.RecursiveUrlLoader")
     def test_url_component_whitespace_proxy_is_ignored(self, mock_recursive_loader_class):
