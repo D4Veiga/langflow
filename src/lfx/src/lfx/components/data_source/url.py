@@ -257,10 +257,10 @@ class URLComponent(Component):
         extractor = extractors.get(self.format, self._text_extractor)
 
         proxy_url = (
-            os.environ.get("http_proxy") or
-            os.environ.get("HTTP_PROXY") or
-            os.environ.get("https_proxy") or
-            os.environ.get("HTTPS_PROXY")
+            os.environ.get("http_proxy")
+            or os.environ.get("HTTP_PROXY")
+            or os.environ.get("https_proxy")
+            or os.environ.get("HTTPS_PROXY")
         )
         has_proxy = bool(proxy_url)
         final_use_async = self.use_async
