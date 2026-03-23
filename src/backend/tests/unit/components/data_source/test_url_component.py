@@ -337,3 +337,28 @@ class TestURLComponent(ComponentTestBaseWithoutClient):
 
         # An empty proxy string should be treated as no proxy
         assert called_kwargs["use_async"] is True
+    
+    @patch.dict(os.environ, {"HTTP_PROXY": "   ", "HTTPS_PROXY": " \t "}, clear=True)
+    @patch("lfx.components.data_source.url.RecursiveUrlLoader")
+    def test_url_component_whitespace_proxy_is_ignored(self, mock_recursive_loader_class):
+        """Test that whitespace-only strings in proxy environment variables do not disable async mode."""
+        component = URLComponent()
+        component.set_attributes(
+            {
+                "urls": ["https://example.com"],
+                "use_async": True,
+                "max_depth": 1,
+                "timeout": 30,
+                "format": "Text",
+                "prevent_outside": True,
+                "headers": [{"key": "User-Agent", "value": "test"}],
+            }
+        )
+
+        component._create_loader("https://example.com")
+
+        mock_recursive_loader_class.assert_called_once()
+        called_kwargs = mock_recursive_loader_class.call_args.kwargs
+
+        # A whitespace-only proxy string should be treated as no proxy
+        assert called_kwargs["use_async"] is True
